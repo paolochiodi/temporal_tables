@@ -46,7 +46,7 @@ BEGIN
     WITH history AS
       (SELECT attname
       FROM   pg_attribute
-      WHERE  attrelid = history_table::regclass
+      WHERE  attrelid = quote_ident(history_table)::regclass
       AND    attnum > 0
       AND    NOT attisdropped),
       main AS
@@ -62,7 +62,7 @@ BEGIN
       AND history.attname != sys_period;
 
     EXECUTE ('INSERT INTO ' ||
-      history_table ||
+      quote_ident(history_table) ||
       '(' ||
       array_to_string(commonColumns , ',') ||
       ',' ||
